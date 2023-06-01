@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 # 获取所有的源文件
 file(GLOB SOURCES "src/*.cpp")
-file(GLOB HEADERS "src/*.hpp")
+file(GLOB HEADERS "src/*.h")
 
 # 生成可执行文件
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
@@ -18,5 +18,3 @@ add_custom_command(
     COMMAND ${PROJECT_NAME} > ${OUTPUT_FILE}
     COMMENT "Redirecting output to ${OUTPUT_FILE}"
 )
-
-
