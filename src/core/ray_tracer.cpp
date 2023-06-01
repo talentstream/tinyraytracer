@@ -8,7 +8,7 @@
 #include "camera.hpp"
 #include "scene.hpp"
 
-const double infinity = std::numeric_limits<double>::infinity();
+#include "../math/constant.hpp"
 
 double clamp(double value, double min, double max)
 {
@@ -25,27 +25,21 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     if (depth <= 0)
         return Color(0, 0, 0);
 
-    HitPoint hit_point;
-    HitPoint temp_hit_point;
+    Intersection intersection;
+    auto objects = scene_->objects();
 
     auto closest_so_far = infinity;
-    bool hit_anything = false;
-    auto objects = scene_->objects();
     for (size_t i = 0; i != objects.size(); ++i)
     {
-        if (objects[i]->intersect(ray, 0.001, closest_so_far, temp_hit_point))
-        {
-            hit_anything = true;
-            closest_so_far = temp_hit_point.t_;
-            hit_point = temp_hit_point;
-        }
+        objects[i]->intersect(ray, 0.001, closest_so_far, intersection);
+        closest_so_far = intersection.isect_time();
+    }
+    if (!intersection.miss())
+    {
+        Point3 target = intersection.position() + intersection.normal() + random_in_hemisphere(intersection.normal());
+        return 0.5 * ray_color(Ray(intersection.position(), target - intersection.position()), depth - 1);
     }
 
-    if (hit_anything)
-    {
-        Point3 target = hit_point.pos_ + hit_point.normal_ + random_in_hemisphere(hit_point.normal_);
-        return 0.5 * ray_color(Ray(hit_point.pos_, target - hit_point.pos_), depth - 1);
-    }
 
     // 背景色
     Vec3 unit_direction = unit_vector(ray.direction());
