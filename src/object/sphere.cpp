@@ -1,6 +1,6 @@
 #include "sphere.hpp"
 
-bool Sphere::hit(const Ray &r, double t_min, double t_max, HitPoint &hit_point) const
+bool Sphere::intersect(const Ray &r, double t_min, double t_max, HitPoint &hit_point) const
 {
 
     // 计算光线是否与球相交, 且算出发现交点的参数t
@@ -23,7 +23,7 @@ bool Sphere::hit(const Ray &r, double t_min, double t_max, HitPoint &hit_point) 
         if (solution < t_min || t_max < solution)
             return false;
     }
-
+    
     hit_point.t_ = solution;
     hit_point.pos_ = r.at(hit_point.t_);
     Vec3 outward_normal = unit_vector(hit_point.pos_ - center_);

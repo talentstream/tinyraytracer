@@ -33,7 +33,7 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     auto objects = scene_->objects();
     for (size_t i = 0; i != objects.size(); ++i)
     {
-        if (objects[i]->hit(ray, 0.001, closest_so_far, temp_hit_point))
+        if (objects[i]->intersect(ray, 0.001, closest_so_far, temp_hit_point))
         {
             hit_anything = true;
             closest_so_far = temp_hit_point.t_;

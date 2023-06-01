@@ -23,8 +23,7 @@ class Object
 public:
     Object() = default;
 
-    virtual bool hit(const Ray &r, double t_min, double t_max, HitPoint &hit_point) const = 0;
-
+    virtual bool intersect(const Ray &r, double t_min, double t_max, HitPoint &hit_point) const = 0;
     virtual ~Object() {}
 };
 
