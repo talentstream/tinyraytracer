@@ -3,14 +3,13 @@
 #include "../core/camera.hpp"
 #include "../object/sphere.hpp"
 
-
 int main()
 {
     // Image
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-
+    const int samples = 10;
     // // Scene
     // ObjectList sscene;
     // sscene.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
@@ -28,10 +27,11 @@ int main()
 
     Camera camera(origin, lower_left_corner, horizontal, vertical);
 
-    Sphere sphere(Point3(0, 0, -1), 0.5);
-    Scene scene(&camera, {&sphere});
-    
-    RayTracer ray_tracer(&scene, image_width, image_height);
+    Sphere sphere1(Point3(0, 0, -1), 0.5);
+    Sphere sphere2(Point3(0, -100.5, -1), 100);
+    Scene scene(&camera, {&sphere1, &sphere2});
+
+    RayTracer ray_tracer(&scene, image_width, image_height, samples);
 
     ray_tracer.render();
 

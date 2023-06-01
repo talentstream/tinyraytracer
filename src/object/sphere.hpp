@@ -15,7 +15,7 @@ public:
     Sphere(Point3 center, double radius) : center_(center), radius_(radius) {}
     ~Sphere() {}
 
-    virtual bool hit(const Ray &r, double t_min, double t_max) const override;
+    virtual bool hit(const Ray &r, double t_min, double t_max, HitPoint &hit_point) const override;
 };
 
 #endif /* _SPHERE_HPP_ */
