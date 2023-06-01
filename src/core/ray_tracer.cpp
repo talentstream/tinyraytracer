@@ -3,18 +3,27 @@
 #include <chrono>
 #include <iostream>
 #include "camera.hpp"
+#include "scene.hpp"
 
-RayTracer::RayTracer(Scene *scene, Camera *camera, int width, int height)
-    : scene_(scene), camera_(camera), width_(width), height_(height)
+RayTracer::RayTracer(Scene *scene, int width, int height)
+    : scene_(scene), width_(width), height_(height)
 {
 }
 
 Color RayTracer::ray_color(const Ray &ray, int depth)
 {
+    // auto objects = scene_->objects();
+    // for(auto object : objects)
+    // {
+    //     if(object->hit(ray, 0, 1000))
+    //     {
+    //         return 1.0 * Color(1.0, 1.0, 1.0);
+    //     }
+    // }
 
     Vec3 unit_direction = unit_vector(ray.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
-    return 1.0 * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
 void RayTracer::render()
@@ -23,6 +32,8 @@ void RayTracer::render()
 
     // Begin Rendering
 
+    std::cerr << "\n Render Started.\n";
+    
     std::cout << "P3\n"
               << width_ << ' ' << height_ << "\n255\n";
 
@@ -43,7 +54,7 @@ void RayTracer::render()
         }
     }
 
-    std::cerr << "\nDone.\n";
+    std::cerr << "\n Render Done.\n";
 
     //  End Rendering
 

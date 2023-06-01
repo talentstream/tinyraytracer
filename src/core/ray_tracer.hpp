@@ -10,7 +10,7 @@ class Camera;
 class RayTracer
 {
 public:
-    RayTracer(Scene *scene, Camera *camera, int width, int height);
+    RayTracer(Scene *scene, int width, int height);
 
     Color ray_color(const Ray &ray, int depth);
 

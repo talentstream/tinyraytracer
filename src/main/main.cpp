@@ -1,6 +1,8 @@
-#include "../utility.hpp"
+#include "../core/ray_tracer.hpp"
+#include "../core/scene.hpp"
+#include "../core/camera.hpp"
 
-#include <iostream>
+
 
 int main()
 {
@@ -9,10 +11,10 @@ int main()
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
 
-    // Scene
-    ObjectList scene;
-    scene.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    scene.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
+    // // Scene
+    // ObjectList sscene;
+    // sscene.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    // sscene.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // Camera
     double viewport_height = 2.0;
@@ -24,25 +26,11 @@ int main()
     Vec3 vertical(0, viewport_height, 0);
     Vec3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
 
-    // Render
-    std::cout << "P3\n"
-              << image_width << ' ' << image_height << "\n255\n";
+    Camera camera(origin, lower_left_corner, horizontal, vertical);
+    Scene scene(&camera, {nullptr});
+    RayTracer ray_tracer(&scene, image_width, image_height);
 
-    for (int j = image_height - 1; j >= 0; --j)
-    {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
-        for (int i = 0; i < image_width; ++i)
-        {
-            auto u = static_cast<double>(i) / (image_width - 1);
-            auto v = static_cast<double>(j) / (image_height - 1);
-            Ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-
-            Color pixel_color = Utility::ray_color(r, scene);
-            Utility::write_color(std::cout, pixel_color);
-        }
-    }
-
-    std::cerr << "\nDone.\n";
+    ray_tracer.render();
 
     return 0;
 }

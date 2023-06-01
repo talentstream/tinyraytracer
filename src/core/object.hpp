@@ -22,9 +22,10 @@ class Object
 {
 public:
     Object() = default;
-    virtual ~Object() {}
 
-    virtual bool hit(const Ray &r, double t_min, double t_max, HitRecord &rec) const = 0;
+    virtual bool hit(const Ray &r, double t_min, double t_max) const = 0;
+   
+    virtual ~Object() {}
 };
 
 #endif /* _OBJECT_HPP_ */
