@@ -3,25 +3,16 @@
 #include <chrono>
 #include <iostream>
 #include <algorithm>
-#include <random>
 #include <limits>
 
 #include "camera.hpp"
 #include "scene.hpp"
-#include "../object/sphere.hpp"
 
 const double infinity = std::numeric_limits<double>::infinity();
 
 double clamp(double value, double min, double max)
 {
     return (value < min) ? min : ((value > max) ? max : value);
-}
-
-inline double double_random()
-{
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-    static std::mt19937 generator;
-    return distribution(generator);
 }
 
 RayTracer::RayTracer(Scene *scene, int width, int height, int samples)
@@ -31,6 +22,8 @@ RayTracer::RayTracer(Scene *scene, int width, int height, int samples)
 
 Color RayTracer::ray_color(const Ray &ray, int depth)
 {
+    if (depth <= 0)
+        return Color(0, 0, 0);
 
     HitPoint hit_point;
     HitPoint temp_hit_point;
@@ -49,7 +42,10 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     }
 
     if (hit_anything)
-        return 0.5 * (hit_point.normal_ + Color(1, 1, 1));
+    {
+        Point3 target = hit_point.pos_ + hit_point.normal_ + random_in_hemisphere(hit_point.normal_);
+        return 0.5 * ray_color(Ray(hit_point.pos_, target - hit_point.pos_), depth - 1);
+    }
 
     // 背景色
     Vec3 unit_direction = unit_vector(ray.direction());
@@ -81,11 +77,8 @@ void RayTracer::render()
                 Ray r = scene_->camera()->get_ray(u, v);
                 pixel_color += ray_color(r, 5);
             }
-            pixel_color /= samples_;
 
-            std::cout << static_cast<int>(256 * clamp(pixel_color[0], 0, 0.999)) << ' '
-                      << static_cast<int>(256 * clamp(pixel_color[1], 0, 0.999)) << ' '
-                      << static_cast<int>(256 * clamp(pixel_color[2], 0, 0.999)) << '\n';
+            print(std::cout, pixel_color);
         }
     }
 
@@ -99,6 +92,21 @@ void RayTracer::render()
     std::cerr << "Time: " << seconds << "s\n";
 }
 
+void RayTracer::print(std::ostream &out, Color pixel_color)
+{
+    auto r = pixel_color.x();
+    auto g = pixel_color.y();
+    auto b = pixel_color.z();
+
+    double scale = 1.0 / samples_;
+    r = sqrt(scale * r);
+    g = sqrt(scale * g);
+    b = sqrt(scale * b);
+
+    out << static_cast<int>(256 * clamp(r, 0, 0.999)) << ' '
+        << static_cast<int>(256 * clamp(g, 0, 0.999)) << ' '
+        << static_cast<int>(256 * clamp(b, 0, 0.999)) << '\n';
+}
 RayTracer::~RayTracer()
 {
 }

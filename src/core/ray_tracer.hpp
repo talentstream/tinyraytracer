@@ -10,13 +10,16 @@ class Camera;
 class RayTracer
 {
 public:
-    RayTracer(Scene *scene, int width, int height,int samples);
+    RayTracer(Scene *scene, int width, int height, int samples);
 
     Color ray_color(const Ray &ray, int depth);
 
     void render();
 
     ~RayTracer();
+
+private:
+    void print(std::ostream &out, Color pixel_color);
 
 private:
     Scene *scene_;

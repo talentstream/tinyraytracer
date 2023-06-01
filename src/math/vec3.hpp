@@ -4,7 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
-
+#include <random>
 // Vec3 Type
 
 class Vec3
@@ -135,4 +135,39 @@ inline Vec3 unit_vector(Vec3 v)
     return v / v.length();
 }
 
+inline double double_random()
+{
+    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+inline double double_random(double min, double max)
+{
+    return min + (max - min) * double_random();
+}
+inline Vec3 random_in_unit_sphere()
+{
+    while (true)
+    {
+        auto p = Vec3(double_random(-1, 1), double_random(-1, 1), double_random(-1, 1));
+        if (p.length_squared() >= 1)
+            continue;
+        return p;
+    }
+}
+
+inline Vec3 random_in_vector()
+{
+    return unit_vector(random_in_unit_sphere());
+}
+
+inline Vec3 random_in_hemisphere(const Vec3 &normal)
+{
+    Vec3 in_unit_sphere = random_in_unit_sphere();
+    if (dot(in_unit_sphere, normal) > 0.0)
+        return in_unit_sphere;
+    else
+        return -1 * in_unit_sphere;
+}
 #endif /* _VEC3_HPP_ */
