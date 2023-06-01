@@ -13,11 +13,13 @@ RayTracer::RayTracer(Scene *scene, int width, int height)
 Color RayTracer::ray_color(const Ray &ray, int depth)
 {
     // auto objects = scene_->objects();
-    // for(auto object : objects)
+
+    // for (auto object : objects)
     // {
-    //     if(object->hit(ray, 0, 1000))
+    //     if (object->hit(ray, 0, 1000))
     //     {
-    //         return 1.0 * Color(1.0, 1.0, 1.0);
+    //         std::cerr << "Hit\n";
+    //         return Color(1.0, 0, 0);
     //     }
     // }
 
@@ -31,20 +33,21 @@ void RayTracer::render()
     auto begin = std::chrono::high_resolution_clock::now();
 
     // Begin Rendering
-
-    std::cerr << "\n Render Started.\n";
     
+    std::cerr << "\n Render Started.\n";
+
     std::cout << "P3\n"
               << width_ << ' ' << height_ << "\n255\n";
 
     for (int j = height_ - 1; j >= 0; --j)
     {
+        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < width_; ++i)
         {
             auto u = double(i) / (width_ - 1);
             auto v = double(j) / (height_ - 1);
 
-            Ray r = camera_->get_ray(u, v);
+            Ray r = scene_->camera()->get_ray(u, v);
 
             Color pixel_color = ray_color(r, 0);
 

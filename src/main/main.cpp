@@ -1,7 +1,7 @@
 #include "../core/ray_tracer.hpp"
 #include "../core/scene.hpp"
 #include "../core/camera.hpp"
-
+#include "../object/sphere.hpp"
 
 
 int main()
@@ -27,7 +27,10 @@ int main()
     Vec3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
 
     Camera camera(origin, lower_left_corner, horizontal, vertical);
-    Scene scene(&camera, {nullptr});
+
+    Sphere sphere(Point3(0, 0, -1), 0.5);
+    Scene scene(&camera, {&sphere});
+    
     RayTracer ray_tracer(&scene, image_width, image_height);
 
     ray_tracer.render();

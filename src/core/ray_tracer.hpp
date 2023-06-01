@@ -20,7 +20,6 @@ public:
 
 private:
     Scene *scene_;
-    Camera *camera_;
     int width_;
     int height_;
 };

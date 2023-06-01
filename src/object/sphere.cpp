@@ -9,16 +9,5 @@ bool Sphere::hit(const Ray &r, double t_min, double t_max) const
     auto c = oc.length_squared() - radius_ * radius_;
 
     auto discriminant = half_b * half_b - a * c;
-    if (discriminant < 0)
-        return false;
-
-    auto root = (-half_b - sqrt(discriminant)) / a;
-    if (root < t_min || t_max < root)
-    {
-        root = (-half_b + sqrt(discriminant)) / a;
-        if (root < t_min || t_max < root)
-            return false;
-    }
-    
-    return true;
+    return discriminant > 0;
 }
