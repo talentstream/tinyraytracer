@@ -2,9 +2,17 @@ cmake_minimum_required(VERSION 3.10)
 project(tinyraytracer)
 set(CMAKE_CXX_STANDARD 11)
 
-# 获取所有的源文件
-file(GLOB SOURCES "src/*.cpp")
-file(GLOB HEADERS "src/*.h")
+# 递归获取所有源文件
+function(get_sources dir result)
+    file(GLOB_RECURSE files ${dir}/*.cpp ${dir}/*.hpp)
+    set(${result} ${files} PARENT_SCOPE)
+endfunction()
+
+# 设置源文件目录
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+
+# 获取所有源文件
+get_sources(${SOURCE_DIR} SOURCES)
 
 # 生成可执行文件
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
