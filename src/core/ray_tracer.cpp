@@ -7,6 +7,7 @@
 
 #include "camera.hpp"
 #include "scene.hpp"
+#include "material.hpp"
 
 #include "../math/constant.hpp"
 
@@ -31,15 +32,23 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     auto closest_so_far = infinity;
     for (size_t i = 0; i != objects.size(); ++i)
     {
-        objects[i]->intersect(ray, 0.001, closest_so_far, intersection);
-        closest_so_far = intersection.isect_time();
-    }
-    if (!intersection.miss())
-    {
-        Point3 target = intersection.position() + intersection.normal() + random_in_hemisphere(intersection.normal());
-        return 0.5 * ray_color(Ray(intersection.position(), target - intersection.position()), depth - 1);
+        if(objects[i]->intersect(ray, 0.001, closest_so_far, intersection))
+        {   
+            closest_so_far = intersection.isect_time();
+        }
     }
 
+    if (!intersection.miss())
+    {
+        Ray scattered;
+        Color attenuation;
+        if (intersection.material()->scatter(ray, intersection, attenuation, scattered))
+            return attenuation * ray_color(scattered, depth - 1);
+        return Color(0, 0, 0);
+
+        // Point3 target = intersection.position() + intersection.normal() + random_in_hemisphere(intersection.normal());
+        // return 0.5 * ray_color(Ray(intersection.position(), target - intersection.position()), depth - 1);
+    }
 
     // 背景色
     Vec3 unit_direction = unit_vector(ray.direction());
@@ -69,7 +78,7 @@ void RayTracer::render()
                 auto u = double(i + double_random()) / (width_ - 1);
                 auto v = double(j + double_random()) / (height_ - 1);
                 Ray r = scene_->camera()->get_ray(u, v);
-                pixel_color += ray_color(r, 5);
+                pixel_color += ray_color(r, 4);
             }
 
             print(std::cout, pixel_color);

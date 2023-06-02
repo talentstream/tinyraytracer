@@ -146,6 +146,7 @@ inline double double_random(double min, double max)
 {
     return min + (max - min) * double_random();
 }
+
 inline Vec3 random_in_unit_sphere()
 {
     while (true)
@@ -169,5 +170,16 @@ inline Vec3 random_in_hemisphere(const Vec3 &normal)
         return in_unit_sphere;
     else
         return -1 * in_unit_sphere;
+}
+
+inline bool near_zero(Vec3 v)
+{
+    const double s = 1e-8;
+    return (std::fabs(v[0]) < s) && (std::fabs(v[1]) < s) && (std::fabs(v[2]) < s);
+}
+
+inline Vec3 reflect(const Vec3 &v, const Vec3 &n)
+{
+    return v - 2 * dot(v, n) * n;
 }
 #endif /* _VEC3_HPP_ */

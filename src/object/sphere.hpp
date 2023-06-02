@@ -9,10 +9,11 @@ class Sphere : public Object
 private:
     Point3 center_;
     double radius_;
+    const Material *material_;
 
 public:
     Sphere() {}
-    Sphere(Point3 center, double radius) : center_(center), radius_(radius) {}
+    Sphere(Point3 center, double radius, const Material *material) : center_(center), radius_(radius), material_(material) {}
     ~Sphere() {}
 
     virtual bool intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const override;

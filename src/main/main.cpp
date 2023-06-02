@@ -2,18 +2,15 @@
 #include "../core/scene.hpp"
 #include "../core/camera.hpp"
 #include "../object/sphere.hpp"
+#include "../material/lambertian.hpp"
+#include "../material/metal.hpp"
 
 int main()
 {
-    // Image
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples = 10;
-    // // Scene
-    // ObjectList sscene;
-    // sscene.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    // sscene.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // Camera
     double viewport_height = 2.0;
@@ -25,11 +22,20 @@ int main()
     Vec3 vertical(0, viewport_height, 0);
     Vec3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
 
+    // Scene
     Camera camera(origin, lower_left_corner, horizontal, vertical);
 
-    Sphere sphere1(Point3(0, 0, -1), 0.5);
-    Sphere sphere2(Point3(0, -100.5, -1), 100);
-    Scene scene(&camera, {&sphere1, &sphere2});
+    auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
+    auto material_center = new Lambertian(Color(0.1, 0.2, 0.5));
+    auto material_left = new Metal(Color(0.8, 0.8, 0.8), 0.3);
+    auto material_right = new Metal(Color(0.8, 0.6, 0.2), 1.0);
+
+    Sphere sphere1(Point3(0, 0, -1), 0.5, material_center);
+    Sphere sphere2(Point3(0, -100.5, -1), 100, material_ground);
+    Sphere sphere3(Point3(-1, 0, -1), 0.5, material_left);
+    Sphere sphere4(Point3(1, 0, -1), 0.5, material_right);
+
+    Scene scene(&camera, {&sphere1, &sphere2, &sphere3, &sphere4});
 
     RayTracer ray_tracer(&scene, image_width, image_height, samples);
 
