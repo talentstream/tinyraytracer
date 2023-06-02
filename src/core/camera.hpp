@@ -12,10 +12,7 @@ private:
     Vec3 vertical_;
 
 public:
-    Camera(Point3 &origin, Vec3 &lower_left_coner, Vec3 &horizontal, Vec3 &vertical)
-        : origin_(origin), lower_left_corner_(lower_left_coner), horizontal_(horizontal), vertical_(vertical)
-    {
-    }
+    Camera(Point3 lookfrom, Point3 lookat, Vec3 up, double fov, double aspect_ratio);
 
     Ray get_ray(double u, double v) const
     {

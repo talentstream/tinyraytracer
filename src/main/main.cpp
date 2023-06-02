@@ -25,7 +25,7 @@ int main()
     Vec3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
 
     // Scene
-    Camera camera(origin, lower_left_corner, horizontal, vertical);
+    Camera camera(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 30, aspect_ratio);
 
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
     auto material_center = new Lambertian(Color(0.1, 0.2, 0.5));
