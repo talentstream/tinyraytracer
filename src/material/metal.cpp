@@ -1,4 +1,4 @@
-#include"metal.hpp"
+#include "metal.hpp"
 
 bool Metal::scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const
 {

@@ -182,4 +182,13 @@ inline Vec3 reflect(const Vec3 &v, const Vec3 &n)
 {
     return v - 2 * dot(v, n) * n;
 }
+
+inline Vec3 refract(const Vec3 &R, const Vec3 &n, double etai_over_etat)
+{
+    auto cos_theta = dot(-1 * R, n);
+    Vec3 r_out_parallel = etai_over_etat * (R + cos_theta * n);
+    Vec3 r_out_perp = -std::sqrt(1.0 - r_out_parallel.length_squared()) * n;
+    return r_out_parallel + r_out_perp;
+}
+
 #endif /* _VEC3_HPP_ */

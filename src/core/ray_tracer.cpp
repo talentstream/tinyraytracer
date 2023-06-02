@@ -16,8 +16,8 @@ double clamp(double value, double min, double max)
     return (value < min) ? min : ((value > max) ? max : value);
 }
 
-RayTracer::RayTracer(Scene *scene, int width, int height, int samples)
-    : scene_(scene), width_(width), height_(height), samples_(samples)
+RayTracer::RayTracer(Scene *scene, int width, int height, int samples, int depth)
+    : scene_(scene), width_(width), height_(height), samples_(samples), depth_(depth)
 {
 }
 
@@ -32,8 +32,8 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     auto closest_so_far = infinity;
     for (size_t i = 0; i != objects.size(); ++i)
     {
-        if(objects[i]->intersect(ray, 0.001, closest_so_far, intersection))
-        {   
+        if (objects[i]->intersect(ray, 0.001, closest_so_far, intersection))
+        {
             closest_so_far = intersection.isect_time();
         }
     }
@@ -78,7 +78,7 @@ void RayTracer::render()
                 auto u = double(i + double_random()) / (width_ - 1);
                 auto v = double(j + double_random()) / (height_ - 1);
                 Ray r = scene_->camera()->get_ray(u, v);
-                pixel_color += ray_color(r, 4);
+                pixel_color += ray_color(r, depth_);
             }
 
             print(std::cout, pixel_color);

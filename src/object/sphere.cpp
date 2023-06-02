@@ -23,7 +23,11 @@ bool Sphere::intersect(const Ray &r, double t_min, double t_max, Intersection &i
             return false;
     }
 
-    intersection.update(solution, r.at(solution), (r.at(solution) - center_) / radius_, material_);
+    Vec3 outward_normal = (r.at(solution) - center_) / radius_;
+    bool front_face = dot(r.direction(), outward_normal) < 0;
+    outward_normal = front_face ? outward_normal : -1 * outward_normal;
+
+    intersection.update(solution, r.at(solution), outward_normal, front_face, material_);
     // hit_point.t_ = solution;
     // hit_point.pos_ = r.at(hit_point.t_);
     // Vec3 outward_normal = unit_vector(hit_point.pos_ - center_);

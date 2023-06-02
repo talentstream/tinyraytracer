@@ -4,6 +4,7 @@
 #include "../object/sphere.hpp"
 #include "../material/lambertian.hpp"
 #include "../material/metal.hpp"
+#include "../material/dielectric.hpp"
 
 int main()
 {
@@ -11,6 +12,7 @@ int main()
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples = 10;
+    const int depth = 50;
 
     // Camera
     double viewport_height = 2.0;
@@ -27,17 +29,18 @@ int main()
 
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
     auto material_center = new Lambertian(Color(0.1, 0.2, 0.5));
-    auto material_left = new Metal(Color(0.8, 0.8, 0.8), 0.3);
-    auto material_right = new Metal(Color(0.8, 0.6, 0.2), 1.0);
+    auto material_left = new Dielectric(1.5);
+    auto material_right = new Metal(Color(0.8, 0.6, 0.2), 0.0);
 
     Sphere sphere1(Point3(0, 0, -1), 0.5, material_center);
     Sphere sphere2(Point3(0, -100.5, -1), 100, material_ground);
     Sphere sphere3(Point3(-1, 0, -1), 0.5, material_left);
-    Sphere sphere4(Point3(1, 0, -1), 0.5, material_right);
+    Sphere sphere4(Point3(-1, 0, -1), -0.4, material_left);
+    Sphere sphere5(Point3(1, 0, -1), 0.5, material_right);
 
-    Scene scene(&camera, {&sphere1, &sphere2, &sphere3, &sphere4});
+    Scene scene(&camera, {&sphere1, &sphere2, &sphere3, &sphere4, &sphere5});
 
-    RayTracer ray_tracer(&scene, image_width, image_height, samples);
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
 
     ray_tracer.render();
 
