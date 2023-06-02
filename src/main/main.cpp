@@ -8,7 +8,7 @@
 
 int main()
 {
-    const double aspect_ratio = 16.0 / 9.0;
+    const double aspect_ratio = 3.0 / 2.0;
     const int image_width = 400;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
     const int samples = 10;
@@ -25,7 +25,12 @@ int main()
     Vec3 lower_left_corner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focal_length);
 
     // Scene
-    Camera camera(Point3(-2, 2, 1), Point3(0, 0, -1), Vec3(0, 1, 0), 30, aspect_ratio);
+    Point3 lookfrom(3, 3, 2);
+    Point3 lookat(0, 0, -1);
+    Vec3 up(0, 1, 0);
+    double dist_to_focus = (lookfrom - lookat).length();
+    double aperture = 2.0;
+    Camera camera(lookfrom, lookat, up, 20, aspect_ratio, aperture, dist_to_focus);
 
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
     auto material_center = new Lambertian(Color(0.1, 0.2, 0.5));

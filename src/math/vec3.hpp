@@ -163,6 +163,17 @@ inline Vec3 random_in_unit_sphere()
     }
 }
 
+inline Vec3 random_in_unit_disk()
+{
+    while (true)
+    {
+        auto p = Vec3(double_random(-1, 1), double_random(-1, 1), 0);
+        if (p.length_squared() >= 1)
+            continue;
+        return p;
+    }
+}
+
 inline Vec3 random_in_vector()
 {
     return unit_vector(random_in_unit_sphere());

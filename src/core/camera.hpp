@@ -10,13 +10,18 @@ private:
     Vec3 lower_left_corner_;
     Vec3 horizontal_;
     Vec3 vertical_;
+    Vec3 u_, v_, w_;
+    double lens_radius_;
 
 public:
-    Camera(Point3 lookfrom, Point3 lookat, Vec3 up, double fov, double aspect_ratio);
+    Camera(Point3 lookfrom, Point3 lookat, Vec3 up, double fov, double aspect_ratio, double aperture, double focus_dist);
 
-    Ray get_ray(double u, double v) const
+    Ray get_ray(double s, double t) const
     {
-        return Ray(origin_, lower_left_corner_ + u * horizontal_ + v * vertical_ - origin_);
+        Vec3 rd = lens_radius_ * random_in_unit_disk();
+        Vec3 offset = u_ * rd.x() + v_ * rd.y();
+
+        return Ray(origin_ + offset, lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset);
     }
 };
 
