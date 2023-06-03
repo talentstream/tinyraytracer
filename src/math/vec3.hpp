@@ -142,9 +142,19 @@ inline double double_random()
     return distribution(generator);
 }
 
+inline Vec3 vec3_random()
+{
+    return Vec3(double_random(), double_random(), double_random());
+}
+
 inline double double_random(double min, double max)
 {
     return min + (max - min) * double_random();
+}
+
+inline Vec3 vec3_random(double min, double max)
+{
+    return Vec3(double_random(min, max), double_random(min, max), double_random(min, max));
 }
 
 inline double degrees_to_radians(double degrees)
