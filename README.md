@@ -60,7 +60,7 @@
 ```    
 
 **display**:
-![](image/random_scene.ppm)
+![](image/random_scene.png)
 
 ### Reference
 
