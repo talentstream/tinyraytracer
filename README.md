@@ -12,15 +12,51 @@
 - [x] Materials: Diffuse, Metal, Dielectrics
 - [x] Camera: Defocus Blur
 
+**code lines**:
+> find . "(" -name "*.cpp" -o -name "*.hpp" ")" -print | xargs wc -l
+
+834 total
+
 **file structure**:
+> tree /f
 ```
 └─src
     ├─core
+    │      camera.cpp
+    │      camera.hpp
+    │      material.cpp
+    │      material.hpp
+    │      object.cpp
+    │      object.hpp
+    │      ray_tracer.cpp
+    │      ray_tracer.hpp
+    │      scene.cpp
+    │      scene.hpp
+    │
     ├─main
+    │      main.cpp
+    │
     ├─material
+    │      dielectric.cpp
+    │      dielectric.hpp
+    │      lambertian.cpp
+    │      lambertian.hpp
+    │      metal.cpp
+    │      metal.hpp
+    │
     ├─math
+    │      constant.cpp
+    │      ray.hpp
+    │      vec3.cpp
+    │      vec3.hpp
+    │
     ├─object
+    │      sphere.cpp
+    │      sphere.hpp
+    │
     └─utility
+            intersection.cpp
+            intersection.hpp
 ```    
 
 ### Reference
