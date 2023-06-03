@@ -1,4 +1,4 @@
-# tinyraytracer
+# Tinyraytracer
 
 ### Raytracing in one week
 2023.5.30 - 2023.6.03
