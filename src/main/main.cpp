@@ -27,7 +27,7 @@ void easy_scene()
 
     Camera camera(lookfrom, lookat, up, 20, aspect_ratio, aperture, dist_to_focus);
 
-    // Scene
+    // Scene Setting
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
     auto material_center = new Lambertian(Color(0.1, 0.2, 0.5));
     auto material_left = new Dielectric(1.5);
@@ -52,7 +52,7 @@ void random_scene()
     const double aspect_ratio = 3.0 / 2.0;
     const int image_width = 1200;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples = 500;
+    const int samples = 50;
     const int depth = 50;
 
     // Camera
@@ -65,7 +65,7 @@ void random_scene()
 
     Camera camera(lookfrom, lookat, up, 20, aspect_ratio, aperture, dist_to_focus);
 
-
+    // Scene Setting
     auto material_ground = new Lambertian(Color(0.5, 0.5, 0.5));
     std::vector<Object *> objects;
     objects.push_back(new Sphere(Point3(0, -1000, 0), 1000, material_ground));
