@@ -59,6 +59,9 @@
             intersection.hpp
 ```    
 
+**display**:
+![](image/random_scene.ppm)
+
 ### Reference
 
 - [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
