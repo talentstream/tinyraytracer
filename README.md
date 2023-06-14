@@ -12,12 +12,12 @@
 - [x] Materials: Diffuse, Metal, Dielectrics
 - [x] Camera: Defocus Blur
 
-**code lines**:
+**Code lines**:
 > find . "(" -name "*.cpp" -o -name "*.hpp" ")" -print | xargs wc -l
 
 834 total
 
-**file structure**:
+**File structure**:
 > tree /f
 ```
 └─src
@@ -59,7 +59,7 @@
             intersection.hpp
 ```    
 
-**display**:
+**Display**:
 ![](image/random_scene.png)
 
 ### Reference
