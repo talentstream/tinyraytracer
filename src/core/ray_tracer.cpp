@@ -11,17 +11,15 @@
 
 #include "../math/constant.hpp"
 
-double clamp(double value, double min, double max)
-{
-    return (value < min) ? min : ((value > max) ? max : value);
-}
+double clamp(double value, double min, double max);
+void Print(std::ostream &out, Color pixel_color, int samples);
 
 RayTracer::RayTracer(Scene *scene, int width, int height, int samples, int depth)
     : scene_(scene), width_(width), height_(height), samples_(samples), depth_(depth)
 {
 }
 
-Color RayTracer::ray_color(const Ray &ray, int depth)
+Color RayTracer::RayColor(const Ray &ray, int depth)
 {
     if (depth <= 0)
         return Color(0, 0, 0);
@@ -29,10 +27,10 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     Intersection intersection;
     auto objects = scene_->objects();
 
-    auto closest_so_far = infinity;
+    auto closest_so_far = kinfinity;
     for (size_t i = 0; i != objects.size(); ++i)
     {
-        if (objects[i]->intersect(ray, 0.001, closest_so_far, intersection))
+        if (objects[i]->Intersect(ray, 0.001, closest_so_far, intersection))
         {
             closest_so_far = intersection.isect_time();
         }
@@ -42,12 +40,12 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     {
         Ray scattered;
         Color attenuation;
-        if (intersection.material()->scatter(ray, intersection, attenuation, scattered))
-            return attenuation * ray_color(scattered, depth - 1);
+        if (intersection.material()->Scatter(ray, intersection, attenuation, scattered))
+            return attenuation * RayColor(scattered, depth - 1);
         return Color(0, 0, 0);
 
         // Point3 target = intersection.position() + intersection.normal() + random_in_hemisphere(intersection.normal());
-        // return 0.5 * ray_color(Ray(intersection.position(), target - intersection.position()), depth - 1);
+        // return 0.5 * RayColor(Ray(intersection.position(), target - intersection.position()), depth - 1);
     }
 
     // 背景色
@@ -56,7 +54,7 @@ Color RayTracer::ray_color(const Ray &ray, int depth)
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
-void RayTracer::render()
+void RayTracer::Render()
 {
     auto begin = std::chrono::high_resolution_clock::now();
 
@@ -77,11 +75,11 @@ void RayTracer::render()
             {
                 auto u = double(i + double_random()) / (width_ - 1);
                 auto v = double(j + double_random()) / (height_ - 1);
-                Ray r = scene_->camera()->get_ray(u, v);
-                pixel_color += ray_color(r, depth_);
+                Ray r = scene_->camera()->GetRay(u, v);
+                pixel_color += RayColor(r, depth_);
             }
 
-            print(std::cout, pixel_color);
+            Print(std::cout, pixel_color, samples_);
         }
     }
 
@@ -95,13 +93,18 @@ void RayTracer::render()
     std::cerr << "Time: " << seconds << "s\n";
 }
 
-void RayTracer::print(std::ostream &out, Color pixel_color)
+double clamp(double value, double min, double max)
+{
+    return (value < min) ? min : ((value > max) ? max : value);
+}
+
+void Print(std::ostream &out, Color pixel_color, int samples)
 {
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
 
-    double scale = 1.0 / samples_;
+    double scale = 1.0 / samples;
     r = sqrt(scale * r);
     g = sqrt(scale * g);
     b = sqrt(scale * b);
@@ -109,7 +112,4 @@ void RayTracer::print(std::ostream &out, Color pixel_color)
     out << static_cast<int>(256 * clamp(r, 0, 0.999)) << ' '
         << static_cast<int>(256 * clamp(g, 0, 0.999)) << ' '
         << static_cast<int>(256 * clamp(b, 0, 0.999)) << '\n';
-}
-RayTracer::~RayTracer()
-{
 }

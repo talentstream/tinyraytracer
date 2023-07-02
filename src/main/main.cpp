@@ -8,7 +8,7 @@
 
 #include <vector>
 
-void easy_scene()
+void EasyScene()
 {
     // Image
     const double aspect_ratio = 16.0 / 9.0;
@@ -19,13 +19,13 @@ void easy_scene()
 
     // Camera
 
-    Point3 lookfrom(3, 3, 2);
-    Point3 lookat(0, 0, -1);
+    Point3 look_from(3, 3, 2);
+    Point3 look_at(0, 0, -1);
     Vec3 up(0, 1, 0);
-    double dist_to_focus = (lookfrom - lookat).length();
+    double dist_to_focus = (look_from - look_at).length();
     double aperture = 2.0;
 
-    Camera camera(lookfrom, lookat, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
 
     // Scene Setting
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
@@ -44,26 +44,26 @@ void easy_scene()
 
     RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
 
-    ray_tracer.render();
+    ray_tracer.Render();
 }
-void random_scene()
+void RandomScene()
 {
     // Image
     const double aspect_ratio = 3.0 / 2.0;
-    const int image_width = 1200;
+    const int image_width = 30;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
-    const int samples = 50;
+    const int samples = 10;
     const int depth = 50;
 
     // Camera
 
-    Point3 lookfrom(13, 2, 3);
-    Point3 lookat(0, 0, 0);
+    Point3 look_from(13, 2, 3);
+    Point3 look_at(0, 0, 0);
     Vec3 up(0, 1, 0);
     double dist_to_focus = 10.0;
     double aperture = 0.1;
 
-    Camera camera(lookfrom, lookat, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
 
     // Scene Setting
     auto material_ground = new Lambertian(Color(0.5, 0.5, 0.5));
@@ -74,19 +74,19 @@ void random_scene()
     {
         for (int b = -11; b < 11; ++b)
         {
-            auto choose_mat = double_random();
+            auto choose_material = double_random();
             Point3 center(a + 0.9 * double_random(), 0.2, b + 0.9 * double_random());
 
             if ((center - Point3(4, 0.2, 0)).length() > 0.9)
             {
 
-                if(choose_mat < 0.8) // diffuse
+                if(choose_material < 0.8) // diffuse
                 {
                     auto albedo = vec3_random() * vec3_random();
 
                     objects.push_back(new Sphere(center, 0.2, new Lambertian(albedo)));
                 }
-                else if(choose_mat < 0.95) // metal
+                else if(choose_material < 0.95) // metal
                 {
                     auto albedo = vec3_random(0.5, 1);
                     auto fuzz = double_random(0, 0.5);
@@ -116,14 +116,14 @@ void random_scene()
 
     RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
 
-    ray_tracer.render();
+    ray_tracer.Render();
 
     return;
 }
 
 int main()
 {
-    // easy_scene();
-    random_scene();
+    // EasyScene();
+    RandomScene();
     return 0;
 }

@@ -1,6 +1,6 @@
 #include "sphere.hpp"
 
-bool Sphere::intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const
+bool Sphere::Intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const
 {
     // 计算光线是否与球相交, 且算出发现交点的参数t
     Vec3 oc = r.origin() - center_;

@@ -11,6 +11,6 @@ class Material
 public:
     Material() {}
     virtual ~Material() {}
-    virtual bool scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const = 0;
+    virtual bool Scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const = 0;
 };
 #endif /* _MATERIAL_HPP_ */

@@ -13,7 +13,7 @@ public:
     Metal(const Color &albedo, double fuzz) : albedo_(albedo), fuzz_(fuzz < 1 ? fuzz : 1) {}
     ~Metal() {}
 
-    virtual bool scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const override;
+    virtual bool Scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const override;
 };
 
 #endif /* _METAL_HPP_ */

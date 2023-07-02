@@ -16,10 +16,10 @@ private:
 public:
     Camera(Point3 lookfrom, Point3 lookat, Vec3 up, double fov, double aspect_ratio, double aperture, double focus_dist);
 
-    Ray get_ray(double s, double t) const
+    Ray GetRay(double s, double t) const
     {
-        Vec3 rd = lens_radius_ * random_in_unit_disk();
-        Vec3 offset = u_ * rd.x() + v_ * rd.y();
+        Vec3 random_disk = lens_radius_ * random_in_unit_disk();
+        Vec3 offset = u_ * random_disk.x() + v_ * random_disk.y();
 
         return Ray(origin_ + offset, lower_left_corner_ + s * horizontal_ + t * vertical_ - origin_ - offset);
     }

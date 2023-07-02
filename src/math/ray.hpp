@@ -16,7 +16,7 @@ public:
     ~Ray() {}
 
     Point3 origin() const { return origin_; }
-    Vec3 direction(   ) const { return direction_; }
+    Vec3 direction() const { return direction_; }
 
     Point3 at(double t) const
     {

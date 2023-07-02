@@ -11,7 +11,7 @@ class Object
 public:
     Object() = default;
 
-    virtual bool intersect(const Ray &, double, double, Intersection &) const = 0;
+    virtual bool Intersect(const Ray &, double, double, Intersection &) const = 0;
     virtual ~Object() {}
 };
 

@@ -9,7 +9,7 @@ class Material;
 class Intersection
 {
 public:
-    Intersection() : isect_time_(infinity) {}
+    Intersection() : isect_time_(kinfinity) {}
 
     void update(double isect_time, const Point3 &position, const Vec3 &normal, bool front_face, const Material *material);
 
@@ -17,7 +17,7 @@ public:
     void setPosition(const Point3 &position) { position_ = position; }
     void setNormal(const Vec3 &normal) { normal_ = normal; }
 
-    bool miss() const { return isect_time_ == infinity; }
+    bool miss() const { return isect_time_ == kinfinity; }
 
     double isect_time() const { return isect_time_; }
     Point3 position() const { return position_; }

@@ -11,7 +11,7 @@ private:
 public:
     Dielectric(double refraction): refraction_(refraction) {}
 
-    virtual bool scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const override;
+    virtual bool Scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const override;
 };
 
 #endif /* _DIELECTRIC_HPP_ */

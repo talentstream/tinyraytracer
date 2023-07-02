@@ -12,14 +12,11 @@ class RayTracer
 public:
     RayTracer(Scene *scene, int width, int height, int samples,int depth_);
 
-    Color ray_color(const Ray &ray, int depth);
+    Color RayColor(const Ray &ray, int depth);
 
-    void render();
+    void Render();
 
-    ~RayTracer();
-
-private:
-    void print(std::ostream &out, Color pixel_color);
+    ~RayTracer() = default;
 
 private:
     Scene *scene_;

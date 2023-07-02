@@ -9,7 +9,7 @@ double reflectance(double cosine, double ref_idx)
     return r0 + (1 - r0) * pow((1 - cosine), 5);
 }
 
-bool Dielectric::scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const
+bool Dielectric::Scatter(const Ray &r_in, const Intersection &intersection, Color &attenuation, Ray &scattered) const
 {
     attenuation = Color(1.0, 1.0, 1.0);
     double refraction_ratio = intersection.front_face() ? (1.0 / refraction_) : refraction_;

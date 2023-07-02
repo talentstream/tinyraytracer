@@ -16,7 +16,7 @@ public:
     Sphere(Point3 center, double radius, const Material *material) : center_(center), radius_(radius), material_(material) {}
     ~Sphere() {}
 
-    virtual bool intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const override;
+    virtual bool Intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const override;
 };
 
 #endif /* _SPHERE_HPP_ */
