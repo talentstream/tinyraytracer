@@ -7,6 +7,7 @@ bool Lambertian::Scatter(const Ray &r_in, const Intersection &intersection, Colo
         scatter_direction = intersection.normal();
         
     scattered = Ray(intersection.position(), scatter_direction);
-    attenuation = albedo_;
+    attenuation = albedo_texture_->Value(intersection.texture_u(), intersection.texture_v(), intersection.position());
+
     return true;
 }

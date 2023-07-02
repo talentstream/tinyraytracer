@@ -1,0 +1,1 @@
+#include "solid_color_texture.hpp"

@@ -27,11 +27,13 @@ bool Sphere::Intersect(const Ray &r, double t_min, double t_max, Intersection &i
     bool front_face = dot(r.direction(), outward_normal) < 0;
     outward_normal = front_face ? outward_normal : -1 * outward_normal;
 
-    intersection.update(solution, r.at(solution), outward_normal, front_face, material_);
-    // hit_point.t_ = solution;
-    // hit_point.pos_ = r.at(hit_point.t_);
-    // Vec3 outward_normal = unit_vector(hit_point.pos_ - center_);
-    // hit_point.set_face_normal(r, outward_normal);
+    // 求纹理uv
+    auto theta = acos(-outward_normal.y());
+    auto phi = atan2(-outward_normal.z(), outward_normal.x()) + M_PI;
+    auto u = phi / (2 * M_PI);
+    auto v = theta / M_PI;
+
+    intersection.Update(solution, r.at(solution), outward_normal, front_face, material_, u, v);
 
     return true;
 }
