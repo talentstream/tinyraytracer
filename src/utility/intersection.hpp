@@ -16,6 +16,8 @@ public:
     void setIsectTime(double isect_time) { isect_time_ = isect_time; }
     void setPosition(const Point3 &position) { position_ = position; }
     void setNormal(const Vec3 &normal) { normal_ = normal; }
+    void setFrontFace() { front_face_ = true; }
+    void setMaterial(const Material *material) { material_ = material; }
 
     bool miss() const { return isect_time_ == kinfinity; }
 

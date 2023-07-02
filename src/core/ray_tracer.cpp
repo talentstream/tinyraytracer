@@ -38,8 +38,7 @@ Color RayTracer::RayColor(const Ray &ray, int depth)
     }
 
     // 如果有物体相交
-    if (intersection.miss())
-        return background_;
+    if (intersection.miss()) return background_;
 
     Ray scattered;
     Color attenuation;
@@ -47,11 +46,6 @@ Color RayTracer::RayColor(const Ray &ray, int depth)
     if (!intersection.material()->Scatter(ray, intersection, attenuation, scattered))
         return emitted;
     return emitted + attenuation * RayColor(scattered, depth - 1);
-
-    // 默认背景色
-    // Vec3 unit_direction = unit_vector(ray.direction());
-    // auto t = 0.5 * (unit_direction.y() + 1.0);
-    // return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
 void RayTracer::Render()
