@@ -152,6 +152,11 @@ inline double double_random(double min, double max)
     return min + (max - min) * double_random();
 }
 
+inline int int_random(int min, int max)
+{
+    return static_cast<int>(double_random(min, max + 1));
+}
+
 inline Vec3 vec3_random(double min, double max)
 {
     return Vec3(double_random(min, max), double_random(min, max), double_random(min, max));

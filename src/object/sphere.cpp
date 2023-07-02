@@ -35,3 +35,10 @@ bool Sphere::Intersect(const Ray &r, double t_min, double t_max, Intersection &i
 
     return true;
 }
+
+bool Sphere::BoundingBox(double t_min, double t_max, AABB &aabb) const
+{
+    aabb = AABB(center_ - Vec3(radius_, radius_, radius_),
+                center_ + Vec3(radius_, radius_, radius_));
+    return true;
+}

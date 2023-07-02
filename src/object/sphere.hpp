@@ -17,6 +17,7 @@ public:
     ~Sphere() {}
 
     virtual bool Intersect(const Ray &r, double t_min, double t_max, Intersection &intersection) const override;
+    virtual bool BoundingBox(double t_min, double t_max, AABB &aabb) const override;
 };
 
 #endif /* _SPHERE_HPP_ */

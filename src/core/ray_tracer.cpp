@@ -27,15 +27,17 @@ Color RayTracer::RayColor(const Ray &ray, int depth)
     Intersection intersection;
     auto objects = scene_->objects();
 
+    // 计算是否有物体相交
     auto closest_so_far = kinfinity;
-    for (size_t i = 0; i != objects.size(); ++i)
+    for (const auto &object : objects)
     {
-        if (objects[i]->Intersect(ray, 0.001, closest_so_far, intersection))
+        if (object->Intersect(ray, 0.001, closest_so_far, intersection))
         {
             closest_so_far = intersection.isect_time();
         }
     }
 
+    // 如果有物体相交
     if (!intersection.miss())
     {
         Ray scattered;
@@ -43,12 +45,9 @@ Color RayTracer::RayColor(const Ray &ray, int depth)
         if (intersection.material()->Scatter(ray, intersection, attenuation, scattered))
             return attenuation * RayColor(scattered, depth - 1);
         return Color(0, 0, 0);
-
-        // Point3 target = intersection.position() + intersection.normal() + random_in_hemisphere(intersection.normal());
-        // return 0.5 * RayColor(Ray(intersection.position(), target - intersection.position()), depth - 1);
     }
 
-    // 背景色
+    // 默认背景色
     Vec3 unit_direction = unit_vector(ray.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
@@ -58,7 +57,7 @@ void RayTracer::Render()
 {
     auto begin = std::chrono::high_resolution_clock::now();
 
-    // Begin Rendering
+    // 开始渲染
 
     std::cerr << "\n Render Started.\n";
 
@@ -85,7 +84,7 @@ void RayTracer::Render()
 
     std::cerr << "\n Render Done.\n";
 
-    //  End Rendering
+    //  结束渲染
 
     auto end = std::chrono::high_resolution_clock::now();
 
