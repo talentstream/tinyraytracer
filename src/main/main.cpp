@@ -1,13 +1,19 @@
 #include "../core/ray_tracer.hpp"
 #include "../core/scene.hpp"
 #include "../core/camera.hpp"
+
 #include "../object/sphere.hpp"
+#include "../object/plane.hpp"
+
 #include "../material/lambertian.hpp"
 #include "../material/metal.hpp"
 #include "../material/dielectric.hpp"
-#include "../texture/checker_texture.hpp"
+#include "../material/diffuse_light.hpp"
+
 #include "../texture/solid_color_texture.hpp"
+#include "../texture/checker_texture.hpp"
 #include "../texture/perlin_noise_texture.hpp"
+#include "../texture/image_texture.hpp"
 
 #include <vector>
 
@@ -15,13 +21,25 @@
 const double aspect_ratio = 16.0 / 9.0;
 const int image_width = 400;
 const int image_height = static_cast<int>(image_width / aspect_ratio);
-const int samples = 10;
+int samples = 10;
 const int depth = 50;
+
+// Camera Settings
+Point3 look_from(13, 2, 3);
+Point3 look_at(0, 0, 0);
+Vec3 up(0, 1, 0);
+double fov = 20.0;
+double dist_to_focus = 10.0;
+double aperture = 0.1;
+
+// BackGround
+Color background(0.70, 0.80, 1.00);
 
 void EasyScene();
 void RandomScene();
 void TwoCheckerSphereScene();
 void TwoPerlinSphereScene();
+void EarthScene();
 
 int main()
 {
@@ -39,6 +57,10 @@ int main()
         break;
     case 4:
         TwoPerlinSphereScene();
+        break;
+    case 5:
+        EarthScene();
+        break;
     default:
         break;
     }
@@ -47,15 +69,8 @@ int main()
 
 void EasyScene()
 {
-    // Camera
 
-    Point3 look_from(3, 3, 2);
-    Point3 look_at(0, 0, -1);
-    Vec3 up(0, 1, 0);
-    double dist_to_focus = (look_from - look_at).length();
-    double aperture = 2.0;
-
-    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, up, fov, aspect_ratio, aperture, dist_to_focus);
 
     // Scene Setting
     auto material_ground = new Lambertian(Color(0.8, 0.8, 0.0));
@@ -72,20 +87,15 @@ void EasyScene()
 
     Scene scene(&camera, objects);
 
-    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth, background);
 
     ray_tracer.Render();
 }
+
 void RandomScene()
 {
-    // Camera
-    Point3 look_from(13, 2, 3);
-    Point3 look_at(0, 0, 0);
-    Vec3 up(0, 1, 0);
-    double dist_to_focus = 10.0;
-    double aperture = 0.1;
 
-    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, up, fov, aspect_ratio, aperture, dist_to_focus);
 
     // Scene Setting
     auto material_ground = new Lambertian(Color(0.5, 0.5, 0.5));
@@ -138,22 +148,17 @@ void RandomScene()
 
     Scene scene(&camera, objects);
 
-    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth, background);
 
     ray_tracer.Render();
 
     return;
 }
+
 void TwoCheckerSphereScene()
 {
-    // Camera
-    Point3 look_from(13, 2, 3);
-    Point3 look_at(0, 0, 0);
-    Vec3 up(0, 1, 0);
-    double dist_to_focus = 10.0;
-    double aperture = 0.1;
 
-    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Camera camera(look_from, look_at, up, fov, aspect_ratio, aperture, dist_to_focus);
 
     auto checker_texture = new CheckerTexture(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9));
     std::vector<Object *> objects;
@@ -162,29 +167,48 @@ void TwoCheckerSphereScene()
 
     Scene scene(&camera, objects);
 
-    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth, background);
 
     ray_tracer.Render();
 }
+
 void TwoPerlinSphereScene()
 {
-    // Camera
-    Point3 look_from(13, 2, 3);
-    Point3 look_at(0, 0, 0);
-    Vec3 up(0, 1, 0);
-    double dist_to_focus = 10.0;
-    double aperture = 0.1;
+    samples = 40;
 
-    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+    Point3 look_from(26, 3, 6);
+    Point3 look_at(0, 2, 0);
+    background = Color(0.0, 0.0, 0.0);
+
+    Camera camera(look_from, look_at, up, fov, aspect_ratio, aperture, dist_to_focus);
 
     auto perlin_texture = new PerlinNoiseTexture(4);
     std::vector<Object *> objects;
     objects.push_back(new Sphere(Point3(0, -1000, 0), 1000, new Lambertian(perlin_texture)));
     objects.push_back(new Sphere(Point3(0, 2, 0), 2, new Lambertian(perlin_texture)));
 
+    auto diffuse_light = new DiffuseLight(Color(4, 4, 4));
+    objects.push_back(new Plane(3, 1, 5, 3, -2, diffuse_light));
+
     Scene scene(&camera, objects);
 
-    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth, background);
+
+    ray_tracer.Render();
+}
+
+void EarthScene()
+{
+    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+
+    auto earth_texture = new ImageTexture("../../resource/earthmap.jpg");
+    std::vector<Object *> objects;
+
+    objects.push_back(new Sphere(Point3(0, 0, 0), 2, new Lambertian(earth_texture)));
+
+    Scene scene(&camera, objects);
+
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth, background);
 
     ray_tracer.Render();
 }

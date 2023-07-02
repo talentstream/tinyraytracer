@@ -14,8 +14,8 @@
 double clamp(double value, double min, double max);
 void Print(std::ostream &out, Color pixel_color, int samples);
 
-RayTracer::RayTracer(Scene *scene, int width, int height, int samples, int depth)
-    : scene_(scene), width_(width), height_(height), samples_(samples), depth_(depth)
+RayTracer::RayTracer(Scene *scene, int width, int height, int samples, int depth, Color background)
+    : scene_(scene), width_(width), height_(height), samples_(samples), depth_(depth), background_(background)
 {
 }
 
@@ -38,19 +38,20 @@ Color RayTracer::RayColor(const Ray &ray, int depth)
     }
 
     // 如果有物体相交
-    if (!intersection.miss())
-    {
-        Ray scattered;
-        Color attenuation;
-        if (intersection.material()->Scatter(ray, intersection, attenuation, scattered))
-            return attenuation * RayColor(scattered, depth - 1);
-        return Color(0, 0, 0);
-    }
+    if (intersection.miss())
+        return background_;
+
+    Ray scattered;
+    Color attenuation;
+    Color emitted = intersection.material()->Emitted(intersection.texture_u(), intersection.texture_v(), intersection.position());
+    if (!intersection.material()->Scatter(ray, intersection, attenuation, scattered))
+        return emitted;
+    return emitted + attenuation * RayColor(scattered, depth - 1);
 
     // 默认背景色
-    Vec3 unit_direction = unit_vector(ray.direction());
-    auto t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+    // Vec3 unit_direction = unit_vector(ray.direction());
+    // auto t = 0.5 * (unit_direction.y() + 1.0);
+    // return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
 void RayTracer::Render()
