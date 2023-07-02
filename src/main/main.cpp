@@ -5,7 +5,9 @@
 #include "../material/lambertian.hpp"
 #include "../material/metal.hpp"
 #include "../material/dielectric.hpp"
-#include "../Texture/checker_texture.hpp"
+#include "../texture/checker_texture.hpp"
+#include "../texture/solid_color_texture.hpp"
+#include "../texture/perlin_noise_texture.hpp"
 
 #include <vector>
 
@@ -19,10 +21,11 @@ const int depth = 50;
 void EasyScene();
 void RandomScene();
 void TwoCheckerSphereScene();
+void TwoPerlinSphereScene();
 
 int main()
 {
-    int select_scene = 3;
+    int select_scene = 4;
     switch (select_scene)
     {
     case 1:
@@ -34,6 +37,8 @@ int main()
     case 3:
         TwoCheckerSphereScene();
         break;
+    case 4:
+        TwoPerlinSphereScene();
     default:
         break;
     }
@@ -154,6 +159,28 @@ void TwoCheckerSphereScene()
     std::vector<Object *> objects;
     objects.push_back(new Sphere(Point3(0, -10, 0), 10, new Lambertian(checker_texture)));
     objects.push_back(new Sphere(Point3(0, 10, 0), 10, new Lambertian(checker_texture)));
+
+    Scene scene(&camera, objects);
+
+    RayTracer ray_tracer(&scene, image_width, image_height, samples, depth);
+
+    ray_tracer.Render();
+}
+void TwoPerlinSphereScene()
+{
+    // Camera
+    Point3 look_from(13, 2, 3);
+    Point3 look_at(0, 0, 0);
+    Vec3 up(0, 1, 0);
+    double dist_to_focus = 10.0;
+    double aperture = 0.1;
+
+    Camera camera(look_from, look_at, up, 20, aspect_ratio, aperture, dist_to_focus);
+
+    auto perlin_texture = new PerlinNoiseTexture(4);
+    std::vector<Object *> objects;
+    objects.push_back(new Sphere(Point3(0, -1000, 0), 1000, new Lambertian(perlin_texture)));
+    objects.push_back(new Sphere(Point3(0, 2, 0), 2, new Lambertian(perlin_texture)));
 
     Scene scene(&camera, objects);
 

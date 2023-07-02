@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cassert>
 #include <random>
+
 // Vec3 Type
 
 class Vec3
